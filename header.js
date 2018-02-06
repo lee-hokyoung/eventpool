@@ -5,7 +5,7 @@ module.exports = function($scope,$currPage){
 				baseUrl: "/"
 			},
 			"arti": { 
-				label: "이벤트12",
+				label: "이벤트12123421",
 				baseUrl: "/explore/이벤트"		
 			},
 			"articles": { 
