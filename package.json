@@ -1,0 +1,24 @@
+{
+  "name": "eventpool",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "dependencies": {
+    "body-parser": "^1.9.2",
+    "express": "^4.4.4",
+    "request": "^2.79.0",
+    "sax": "^0.6.1",
+    "xml2js": "^0.4.4",
+    "xmlbuilder": "^2.4.5",
+    "xmldoc": "^0.1.4"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "test"
+  },
+  "keywords": [
+    "eventpool"
+  ],
+  "author": "master",
+  "license": "ISC"
+}
