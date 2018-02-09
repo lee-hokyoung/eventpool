@@ -1,43 +1,43 @@
 fs = require("fs");
 module.exports = function($scope,$currPage){
-	$menu = {"home": {
+	$menu = {
+		"home":
+			{
 				label: "Home",
 				baseUrl: "/"
 			},
-			"arti": { 
+			"arti": {
 				label: "이벤트",
-				baseUrl: "/explore/이벤트123"
+				baseUrl: "/explore/이벤트"
 			},
-			"articles": { 
+			"articles": {
 				label: "관련인물",
-				baseUrl: "/explore/관련인물"		
+				baseUrl: "/explore/관련인물"
 			},
-			"even": { 
+			"even": {
 				label: "nearBy",
-				baseUrl: "/explore/nearBy"		
+				baseUrl: "/explore/nearBy"
 			},
-			"time": { 
+			"time": {
 				label: "주제",
-				baseUrl: "/explore/주제"		
+				baseUrl: "/explore/주제"
 			},
-			"timeline": { 
+			"timeline": {
 				label: "주최",
-				baseUrl: "/explore/주최"		
+				baseUrl: "/explore/주최"
 			},
-			"line": { 
+			"line": {
 				label: "주관",
-				baseUrl: "/explore/주관"		
+				baseUrl: "/explore/주관"
 			},
-			"authors-": { 
+			"authors-": {
 				label: "이용자태깅",
-				baseUrl: "/explore/이용자태깅"		
+				baseUrl: "/explore/이용자태깅"
 			},
-			"authors": { 
+			"authors": {
 				label: "큐레이터",
-				baseUrl: "/explore/큐레이터"		
+				baseUrl: "/explore/큐레이터"
 			},
-
-			
 	};
 	//Handling Explore
 	/*$scope.browsingClasses.forEach(function(a){
@@ -57,17 +57,17 @@ module.exports = function($scope,$currPage){
 				}
 			});
 			$renderMenu += '</ul></div>';
-			
+
 		}else{
-			$renderMenu += '<a href="' + curr.baseUrl +'"><div class="dropdown"><button class="btn btn-default' +($currPage == key ? ' current' : '')+'" type="button">' + curr.label + '</button></div></a>'	
+			$renderMenu += '<a href="' + curr.baseUrl +'"><div class="dropdown"><button class="btn btn-default' +($currPage == key ? ' current' : '')+'" type="button">' + curr.label + '</button></div></a>'
 		}
 	}
-	
+
 	$renderMenu += '<div class="dropdown no-hide"><button class="btn btn-default btn-search" type="button" id="home"><i class="fa fa-search"></i></button></div><input id="searchText" class="typeahead ui-autocomplete-input" autocomplete="off" type="text" placeholder="Search...">'
-	
+
 	$renderMenu += '</div><!--nav-main--></div><!--nav-scroller--></div><!--nav-->'
-	
-	var tmp = '' + fs.readFileSync("static_pages/header.html");
+
+	var tmp = '' + fs.readFileSync(__dirname + "/static_pages/header.html");
 	tmp = tmp.replace("<%MENU%>",$renderMenu);
 	return tmp;
 }

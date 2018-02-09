@@ -12,5 +12,5 @@ module.exports = function($scope){
 	'</body></html>';
 	return $page;
 */
-	return '' + fs.readFileSync("static_pages/footer.html");
+	return '' + fs.readFileSync(__dirname + "/static_pages/footer.html");
 }

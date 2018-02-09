@@ -106,7 +106,8 @@ var $filter = function(array, expression, comparator) {
     }
     return filtered;
   };
-var res = JSON.parse(fs.readFileSync("phones.json"));
+console.log(process.cwd());
+
 function parsePhonesJson(result){
 var countFor = function(className){
         if(debug) console.log("counting for", className);
@@ -154,7 +155,7 @@ var parseDesc = function(res,justLink){
 	if(!matches){
 		return res;
 	}
-	matches.forEach(function(index){ 
+	matches.forEach(function(index){
 		var uri = index.substring(2, index.length-2);
 		if(MatchLookup[uri]){
 			return;
@@ -250,7 +251,7 @@ for(var key in result){
 		if(!util.isArray(types)){
 			types = [types];
 		}
-		
+
 		types.forEach(function(type){
     		if(type.lastIndexOf("http://www.w3.org") != -1 && type.lastIndexOf("/skos") == -1)
     		{
@@ -269,9 +270,9 @@ for(var key in result){
 		    					subclasses = $scope.classes[result[key]['@id']].subclasses;
 		    					subclassesCnt = $scope.classes[result[key]['@id']].subclassesCnt;
 	    					}
-	    					$scope.classes[result[key]['@id']] = $scope.classes[result[key]['http://www.w3.org/2000/01/rdf-schema#subClassOf']['@id']].subclasses[result[key]['@id']] = 
-	    					{ 
-	    					spec: result[key], 
+	    					$scope.classes[result[key]['@id']] = $scope.classes[result[key]['http://www.w3.org/2000/01/rdf-schema#subClassOf']['@id']].subclasses[result[key]['@id']] =
+	    					{
+	    					spec: result[key],
 	    					objs: objs,
 	    					subclasses: subclasses,
 	    					subclassesCnt: subclassesCnt,
@@ -280,7 +281,7 @@ for(var key in result){
 	    					$scope.classes[result[key]['http://www.w3.org/2000/01/rdf-schema#subClassOf']['@id']].subclasses.push(result[key]['@id']);
 	    					$scope.classes[result[key]['http://www.w3.org/2000/01/rdf-schema#subClassOf']['@id']].subclassesCnt++;
     			}
-	  
+
 if((type == 'http://www.w3.org/2002/07/owl#ObjectProperty' || type == 'http://www.w3.org/2002/07/owl#SymmetricProperty') && result[key]['http://www.w3.org/2000/01/rdf-schema#range']){
 		    		$scope.facetTypesLookUp[result[key]['@id']] = $scope.facetTypes.length;
 		    		$scope.facetTypes.push(
@@ -290,7 +291,7 @@ if((type == 'http://www.w3.org/2002/07/owl#ObjectProperty' || type == 'http://ww
 			    		range: result[key]['http://www.w3.org/2000/01/rdf-schema#range'] ? result[key]['http://www.w3.org/2000/01/rdf-schema#range']['@id'] : null,
 			    		domain: result[key]['http://www.w3.org/2000/01/rdf-schema#domain'] ? result[key]['http://www.w3.org/2000/01/rdf-schema#domain']['@id'] : null
 		    		});
-		    		
+
 	    		}
     		}
     		else
@@ -305,7 +306,7 @@ if((type == 'http://www.w3.org/2002/07/owl#ObjectProperty' || type == 'http://ww
 				   for(var propname in result[key]){
 					   	if(propname[0] == '@')
 					   		continue;
-					   
+
 						var checkIncoming = function($id){
 							var referred = result.filter(function( a ) {
 							   	return a['@id'] == $id;
@@ -337,7 +338,7 @@ if((type == 'http://www.w3.org/2002/07/owl#ObjectProperty' || type == 'http://ww
 							   	referred['@incoming'].push({'@from': result[key]['@id'], '@property': propname});
 						   	}
 					   	}
-					   	
+
 					   	if(!util.isArray(result[key][propname])){
 					   		if(result[key][propname]['@id']){
 						   		checkIncoming(result[key][propname]['@id']);
@@ -349,7 +350,7 @@ if((type == 'http://www.w3.org/2002/07/owl#ObjectProperty' || type == 'http://ww
 						   		}
 						   	});
 					   	}
-					   	
+
 				   }
 		    }
 	    });
@@ -361,7 +362,7 @@ for (var $objName in $scope.objs){
 		continue;
 	$obj['@incoming'].forEach(function(value){
 		var inverseFunId = false;
-	
+
 		if($scope.objs[value['@property']] && $scope.objs[value['@property']]['http://www.w3.org/2002/07/owl#inverseOf'] && $scope.objs[value['@property']]['http://www.w3.org/2002/07/owl#inverseOf']['@id']){
 			inverseFunId = $scope.objs[value['@property']]['http://www.w3.org/2002/07/owl#inverseOf']['@id'];
 		}
@@ -381,7 +382,7 @@ for (var $objName in $scope.objs){
 			value['@rewritten'] = true;
 		}
 	})
-	
+
 }
 /*
 for(var facetType in $scope.facetTypes){
@@ -426,7 +427,7 @@ for(var facetType in $scope.facetTypes){
 			}
 	});
 	$scope.types[inverseFacet['domain']] = invDomain;
-	
+
 }
 */
 var facetObjs = {};
@@ -479,7 +480,7 @@ sub.objs.forEach(function(obj){
 	obj['@type'] = obj['@type'].concat(types);
 	obj['@searchable'] =
 		[
-			obj['@id'], 
+			obj['@id'],
 			obj['http://www.w3.org/2000/01/rdf-schema#label'] ? obj['http://www.w3.org/2000/01/rdf-schema#label'] : '',
 			obj['http://www.w3.org/2004/02/skos/core#altLabel'] ? obj['http://www.w3.org/2004/02/skos/core#altLabel'] : '',
 			obj['http://www.w3.org/2004/02/skos/core#hiddenLabel'] ? obj['http://www.w3.org/2004/02/skos/core#hiddenLabel'] : '',
@@ -493,7 +494,7 @@ for(var key in $scope.classes){
 $scope.classes[key].objs.forEach(function(obj){
 		obj['@searchable'] =
 		[
-			obj['@id'] ? obj['@id'] : '', 
+			obj['@id'] ? obj['@id'] : '',
 			obj['http://www.w3.org/2000/01/rdf-schema#label'] ? obj['http://www.w3.org/2000/01/rdf-schema#label'] : '',
 			obj['http://www.w3.org/2004/02/skos/core#altLabel'] ? obj['http://www.w3.org/2004/02/skos/core#altLabel'] : '',
 			obj['http://www.w3.org/2004/02/skos/core#hiddenLabel'] ? obj['http://www.w3.org/2004/02/skos/core#hiddenLabel'] : '',
@@ -532,6 +533,7 @@ countFor("http://www.w3.org/2002/07/owl#Thing");
 $scope.showOnNavigator_PropertyUri = $scope.ontology['@id'] + "showOnNavigator";
 return $scope;
 }
+var res = JSON.parse(fs.readFileSync(__dirname + "/phones.json"));
 $scope = parsePhonesJson(res);
 $app = express();
 $app.use(bodyParser.urlencoded({ extended: false }));
@@ -550,6 +552,8 @@ $detail = require("./detail.js");
 $simple = require("./simple.js");
 $list = require("./list.js");
 $listExplore = require("./listExplore.js");
+$insert = require('./insertData.js');
+
 $propRangeJson = require("./rangeJson.js");
 $searchJson = require("./searchJson.js");
 $timelineJson = require("./timelineJson.js");
@@ -590,7 +594,7 @@ $staticUris.forEach(function(uriObj){
 		res.write($footer($scope));
 		res.end();
 	});
-	
+
 });
 /*
 $app.all(/^\/(|index\.html)$/,function (req, res, next) {
@@ -662,34 +666,32 @@ delete tmpObjs;
 $app.all(/^\/(|index\.html)$/,function (req, res, next) {
 	res.header("Content-Type", "text/html");
 	res.write($header($scope,"home"));
-	
+
 	var now = new Date();
 	var dayN = parseInt(now.getTime() / 86400000);
-	
+
 	if($homeDate != dayN){
 		var obj = $homeObjs[dayN % $homeObjs.length];
-		var loader = '' + fs.readFileSync("static_pages/home.html");
+		var loader = '' + fs.readFileSync(__dirname + "/static_pages/home.html");
 		loader = loader.replace("<%TODAY_ID%>",obj.dbid);
 		loader = loader.replace("<%TODAY_IMG%>",obj.pic);
 		loader = loader.replace("<%TODAY_TITLE%>",obj.name);
 		loader = loader.replace("<%TODAY_DESC%>",obj.desc);
-		
+
 		$homeCache = loader;
 		$homeDate = dayN;
 	}
-	
+
 	res.write($homeCache);
 	res.write($footer($scope));
 	res.end();
-	
-	
 });
 $app.all(/^\/facets$/,function (req, res, next) {
   res.header("Content-Type", "text/html");
   res.write($header($scope,"facets"));
-  
+
   var $rest = {};
-  
+
   if(req.body['restrictions']){
 	  try{
 	  	$rest['filters'] = JSON.parse(req.body['restrictions']);
@@ -705,7 +707,7 @@ $app.all(/^\/facets$/,function (req, res, next) {
 	 	$rest["filters"] = {};
 	 $rest["filters"]["@searchable"] =  req.body['@searchable'];
   }
-  
+
   var menu = '<a href="/facets">' +
 	'<div class="option active menu1">' +
 	'<div class="fa"></div>' +
@@ -716,13 +718,13 @@ $app.all(/^\/facets$/,function (req, res, next) {
   $exploreAllowed.forEach(function(a){
 		menu += '<a href="/explore/'+ a +'"><div class="option '+ (req.params[1] == a ? 'active ' : '') +'menu'+ (k++) +'"><div class="fa"></div><div class="menuLabel">'+a+'</div></div></a>';
 	});
-  
+
   res.write($list($scope,$filter,$rest,menu));
   res.write($footer($scope));
   res.end();
 });
 
-$browsingPageContents = '' + fs.readFileSync("static_pages/browsing.html");
+$browsingPageContents = '' + fs.readFileSync(__dirname + "/static_pages/browsing.html");
 $browsingAllowed = [];
 $BrowsingClassesProperty = $scope.fromOntology('BrowsingClasses') ? $scope.fromOntology('BrowsingClasses')['@id'] :'BrowsingClasses';
 if($BrowsingClassesProperty && $SiteProperties[$BrowsingClassesProperty] && $SiteProperties[$BrowsingClassesProperty]['@list']){
@@ -730,7 +732,7 @@ if($BrowsingClassesProperty && $SiteProperties[$BrowsingClassesProperty] && $Sit
 		$browsingAllowed.push($scope.toOntology(cl['@id']));
 	});
 
-	
+
 }
 
 $exploreAllowed = [];
@@ -740,18 +742,18 @@ if($BrowsingFacetsProperty && $SiteProperties[$BrowsingFacetsProperty] && $SiteP
 		$exploreAllowed.push($scope.toOntology(cl['@id']));
 	});
 
-	
+
 }
 
 
 $browsingStatic = {};
 //$browsingStatic = {'타임라인': '' + fs.readFileSync("static_pages/bw_timeline.html")}
 $app.all(/^\/browsing$/,function (req, res, next) {
-	
+
 	res.redirect('/browsing/'+encodeURIComponent($browsingAllowed[0]).replace("%2F","/"));
 	res.end();
 	return;
-	
+
 });
 $app.all(/^\/browsing\/(.*)/,function (req, res, next) {
 	if($browsingAllowed.indexOf(req.params[0]) == -1){
@@ -762,13 +764,13 @@ $app.all(/^\/browsing\/(.*)/,function (req, res, next) {
 		res.end();
 		return;
 	}
-	
+
 	var $menu = '';
 	var k = 1;
 	$browsingAllowed.forEach(function(a){
 		$menu += '<a href="/browsing/'+ a +'"><div class="option '+ (req.params[0] == a ? 'active ' : '') +'menu'+ (k++) +'"><div class="fa"></div><div class="menuLabel">'+($browsingStatic[a] ? a : a + '별' )+'</div></div></a>';
 	});
-	
+
 	res.header("Content-Type", "text/html");
 	res.write($header($scope,"browsing"));
 	if($browsingStatic[req.params[0]]){
@@ -776,11 +778,11 @@ $app.all(/^\/browsing\/(.*)/,function (req, res, next) {
 	}else{
 		res.write($browsingPageContents.replace("<%MENU%>",$menu).replace("<%CLASSNAME%>",req.params[0]));
 	}
-	
+
 	res.write($footer($scope));
 	res.end();
-	
-	
+
+
 });
 
 /*
@@ -792,18 +794,18 @@ $app.all(/^\/facets_home$/,function (req, res, next) {
 		menu += '<a href="/explore/'+ a +'"><div class="option '+ (req.params[1] == a ? 'active ' : '') +'menu'+ (k++) +'"><div class="fa"></div><div class="menuLabel">'+a+'</div></div></a>';
 	});
 	loader = loader.replace("<%MENU%>",menu);
-	
+
 	res.header("Content-Type", "text/html");
 	res.write($header($scope,"facets"));
 	res.write(loader);
 	res.write($footer($scope));
 	res.end();
-	
+
 });
 */
 
 $app.all(/^\/(facets|explore)\/(.*)/,function (req, res, next) {
-  var $obj = $scope.fromOntology(req.params[1]); 
+  var $obj = $scope.fromOntology(req.params[1]);
   if(!$obj || $obj["@type"] != "http://www.w3.org/2002/07/owl#Class"){
 	res.header("Content-Type", "text/html");
 	res.write($header($scope,"facets"));
@@ -836,15 +838,17 @@ $app.all(/^\/(facets|explore)\/(.*)/,function (req, res, next) {
 	'</a>';
   var k = 2;
   $exploreAllowed.forEach(function(a){
-		menu += '<a href="/explore/'+ a +'"><div class="option '+ (req.params[1] == a ? 'active ' : '') +'menu'+ (k++) +'"><div class="fa"></div><div class="menuLabel">'+a+'</div></div></a>';
-	});
-  
+  	menu += '<a href="/explore/'+ a +'"><div class="option '+ (req.params[1] == a ? 'active ' : '') +'menu'+ (k++) +'"><div class="fa"></div><div class="menuLabel">'+a+'</div></div></a>';
+  });
+
   res.header("Content-Type", "text/html");
   res.write($header($scope,"facets"));
   if(req.params[0] == "facets"){
 	  res.write($list($scope,$filter,$rest,menu));
   }else if(req.params[0] == "explore"){
 	  res.write($listExplore($scope,$rest,menu));
+  }else if(req.params[0] == "insert"){
+  	res.write($insert($scope, $rest, menu));
   }
   
   res.write($footer($scope));
