@@ -1,0 +1,233 @@
+<div id="section" class="browsing">
+		<input type="text" name="search" id="search-box" maxlength="55">
+		<div id="hero">
+		  <div class="secondaryMenu">
+			  <%MENU%>
+		  </div>
+		</div>
+	<div id="content">
+	<div id="저작" class="section">
+		<!--
+		<h3>
+		저작
+		<span class="pipe"> | </span>
+		View all {total #}
+		</h3>
+		-->
+		<div class="browsingLetters">
+		<center>
+		<a href="javascript:" class="disabled">A</a>
+		<a href="javascript:" class="disabled">B</a>
+		<a href="javascript:" class="disabled">C</a>
+		<a href="javascript:" class="disabled">D</a>
+		<a href="javascript:" class="disabled">E</a>
+		<a href="javascript:" class="disabled">F</a>
+		<a href="javascript:" class="disabled">G</a>
+		<a href="javascript:" class="disabled">H</a>
+		<a href="javascript:" class="disabled">I</a>
+		<a href="javascript:" class="disabled">J</a>
+		<a href="javascript:" class="disabled">K</a>
+		<a href="javascript:" class="disabled">L</a>
+		<a href="javascript:" class="disabled">M</a>
+		<a href="javascript:" class="disabled">N</a>
+		<a href="javascript:" class="disabled">O</a>
+		<a href="javascript:" class="disabled">P</a>
+		<a href="javascript:" class="disabled">Q</a>
+		<a href="javascript:" class="disabled">R</a>
+		<a href="javascript:" class="disabled">S</a>
+		<a href="javascript:" class="disabled">T</a>
+		<a href="javascript:" class="disabled">U</a>
+		<a href="javascript:" class="disabled">V</a>
+		<a href="javascript:" class="disabled">W</a>
+		<a href="javascript:" class="disabled">X</a>
+		<a href="javascript:" class="disabled">Y</a>
+		<a href="javascript:" class="disabled">Z</a>
+		<a href="javascript:" class="disabled">ㄱ</a>
+		<a href="javascript:" class="disabled">ㄲ</a>
+		<a href="javascript:" class="disabled">ㄴ</a>
+		<a href="javascript:" class="disabled">ㄷ</a>
+		<a href="javascript:" class="disabled">ㄸ</a>
+		<a href="javascript:" class="disabled">ㄹ</a>
+		<a href="javascript:" class="disabled">ㅁ</a>
+		<a href="javascript:" class="disabled">ㅂ</a>
+		<a href="javascript:" class="disabled">ㅃ</a>
+		<a href="javascript:" class="disabled">ㅅ</a>
+		<a href="javascript:" class="disabled">ㅆ</a>
+		<a href="javascript:" class="disabled">ㅇ</a>
+		<a href="javascript:" class="disabled">ㅈ</a>
+		<a href="javascript:" class="disabled">ㅉ</a>
+		<a href="javascript:" class="disabled">ㅊ</a>
+		<a href="javascript:" class="disabled">ㅋ</a>
+		<a href="javascript:" class="disabled">ㅌ</a>
+		<a href="javascript:" class="disabled">ㅍ</a>
+		<a href="javascript:" class="disabled">ㅎ</a>
+		</center>
+		</div>
+		 <div class="contents">
+			<div id="Pbrowser">
+				<div id="Pb-container"></div>
+				<div id="btn-pre" class="arrows"></div>
+				<div id="btn-next" class="arrows"></div>	
+				<div class="btn-mov" onclick="PbScroll(675);"></div>
+				<div class="btn-mov right" onclick="PbScroll(-675);"></div>
+			</div>
+		 </div>
+	</div> 
+	<script>
+			function Content(_name ,_date, _image, _dbid,_desc){
+				this.name = _name;
+				this.date = _date;
+				this.image = _image;
+				this.dbid = _dbid;
+				this.desc = _desc;
+			}
+			
+			function PbScroll(x){
+				var cont = document.getElementById("Pb-container");
+				var left = cont.style.left;
+				left = left.split("px");
+				left = left[0] * 1;
+				left = left + x;
+				if(left > 0){
+					left = 0;
+				}
+				cont.style.left = left+"px";
+			}
+			
+			var Pb = {};
+			Pb.mouseover = false;
+			Pb.maxWidth = 0;
+			Pb.minWidth = 0;
+			Pb.ctns = new Array();
+			Pb.firstLetters = {};
+			
+			Pb.loadContent = function(){
+				$.post("/range.json",{"CSRF": "1","className":"<%CLASSNAME%>"}, function( data ) {
+					for(var i=0; i<data.length;i++){
+						c = data[i];
+						if(!Pb.firstLetters[c['@firstLetter']]){
+							Pb.firstLetters[c['@firstLetter']] = i+1;
+						}
+						//Tslider.event.push(new Book(book.name,book.year,book.pic,book.dbid,book.desc));
+						Pb.ctns.push(new Content(c.name,c.year,c.pic,c.dbid,c.desc));
+					};
+					Pb.createElement();	
+					
+					$(".disabled").each(function(i,content){
+						var l = $(content).text();
+						if(Pb.firstLetters[l]){
+							$(content).removeClass("disabled");
+							$(content).click(function() {
+								var cont = document.getElementById("Pb-container");
+								var left = -675 * (parseInt(Pb.firstLetters[l])-1);
+								cont.style.left = left+"px";
+							})
+						}	
+					});
+					
+					$(".ctn-desc").each(function(i,content){
+						if( content.offsetHeight < content.scrollHeight ||
+							content.offsetWidth < content.scrollWidth){
+								$(content).addClass("overflown");
+								var readMore = document.createElement("div");
+								readMore.setAttribute("class", "ctn-readmore");
+								readMore.innerHTML = "<a href='" + $(content).attr("ref")  +  "' onclick='preventDefault(event); if(history.pushState) { history.pushState(null, null, location.pathname + \"#\" + document.getElementById(\"Pb-container\").style.left); }else{ location.hash = \"#\" + document.getElementById(\"Pb-container\").style.left;} document.location.href = this.href;'>더보기</a>";
+								$(content).parent().append(readMore);
+						}
+					});
+					
+					/*
+	setTimeout(function(){ 
+						console.log("called " + content.offsetHeight + " " + content.scrollHeight);
+						console.log($(".ctn-desc")[0].offsetHeight,$(".ctn-desc")[0].scrollHeight);
+						if( content.offsetHeight < content.scrollHeight ||
+							content.offsetWidth < content.scrollWidth){
+								console.log("overflow" + dbid);
+								//overflow detection
+								content.addClass("overflown");
+								
+						}
+						},1000);
+	*/
+									
+	  			});
+			}
+			Pb.createElement = function(){
+				var e = document.getElementById("Pb-container");
+					var newE = null;
+					if(location.hash){
+							var left = (location.hash.split("#")[1]).split("px");
+							left = parseInt(left[0]);
+							e.style.left = left+"px";
+							console.log(e.style.left);
+							history.pushState(null, null, location.pathname);
+					}
+					for(var i = 0; i < Pb.ctns.length; i++){
+						newE = document.createElement("div");
+						newE.setAttribute("id","ctn"+i);
+						newE.setAttribute("class","Pb-content");
+						newE.innerHTML = "<a href='" + Pb.ctns[i].dbid  +  "' onclick='preventDefault(event); if(history.pushState) { history.pushState(null, null, location.pathname + \"#\" + document.getElementById(\"Pb-container\").style.left); }else{ location.hash = \"#\" + document.getElementById(\"Pb-container\").style.left;} document.location.href = this.href;'><img width=300 src='"+Pb.ctns[i].image+"' /></a><div class='desc-container'><div class='ctn-title'><a href='" + Pb.ctns[i].dbid  +  "' onclick='preventDefault(event); if(history.pushState) { history.pushState(null, null, location.pathname + \"#\" + document.getElementById(\"Pb-container\").style.left); }else{ location.hash = \"#\" + document.getElementById(\"Pb-container\").style.left;} document.location.href = this.href;'><span>"+Pb.ctns[i].name+"</span></a></div><div class='ctn-desc' ref="+ Pb.ctns[i].dbid + ">"+Pb.ctns[i].desc+"</div></div>";
+						
+						e.appendChild(newE);
+						
+						var ele = $(newE);
+						var container = ele.children(".desc-container");
+						var content = container.children(".ctn-desc");
+						var dbid = Pb.ctns[i].desc;
+	
+						
+						
+					}
+			}
+	
+			Pb.init = function(){
+				Pb.loadContent();
+				
+				var div = document.getElementById("Pbrowser");
+					div.addEventListener("mouseover",function(){
+						Pb.mouseover = true;
+					});
+					div.addEventListener("mouseleave",function(){
+						Pb.mouseover = false;
+					});
+					div.addEventListener("wheel",Pb.scroll);
+				//BugFix
+				PbScroll(1);
+				PbScroll(-1);
+			}
+			
+			Pb.scroll = function(e){
+				if(!(Pb.mouseover)) return false;
+				var e = window.event || e; // old IE support
+				var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
+				var cont = document.getElementById("Pb-container");
+				var left = null;
+				if(delta < 0){
+					/*scroll-down*/
+					left = cont.style.left;
+					left = left.split("px");
+					left = left[0] * 1;
+					left = left - 40;
+					cont.style.left = left+"px";
+				}else{
+					/*scroll-up*/
+					left = cont.style.left;
+					left = left.split("px");
+					left = left[0] * 1;
+					//	if(left > 15) return false;
+					left = left + 40;
+					if(left > 0){
+						left = 0;
+						cont.style.left = left+"px";
+						return false;
+					}else{
+						cont.style.left = left+"px";
+					}
+					
+				}
+				preventDefault(e);
+			}
+			Pb.init();
+	</script>
+	</div> <!-- /#content -->
+</div><!-- /#section -->
